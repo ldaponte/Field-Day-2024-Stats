@@ -1,10 +1,11 @@
 import csv
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
 from dateutil import tz
 import numpy as np
 
 contest_period = np.zeros(1440, dtype=np.int64)
+contest_period_times = []
 
 from_zone = tz.tzutc()
 to_zone = tz.tzlocal()
@@ -41,11 +42,21 @@ with open('data/W7AVM Field Day 2024 ARRL-FD.csv') as csvfile:
 start = 0
 end = 59
 
-for i in range(1440):
-    print(i, np.sum(contest_period[start:end]))
-    start = start + 1
-    end = end + 1
+minute_time = start_time
 
+for i in range(1440):
+    contest_period_times.append(minute_time)
+    minute_time = minute_time + timedelta(minutes=1) 
+
+with open('rates.csv', 'w', newline='') as csvfile:
+    writer = csv.writer(csvfile, delimiter=',',
+                            quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        
+    for i in range(1440):
+        writer.writerow([contest_period_times[i], np.sum(contest_period[start:end])])
+        # print(contest_period_times[i], np.sum(contest_period[start:end]))
+        start = start + 1
+        end = end + 1
 
 '''
 for idx, minute in enumerate(contest_period):
