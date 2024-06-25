@@ -40,7 +40,7 @@ with open('data/W7AVM Field Day 2024 ARRL-FD.csv') as csvfile:
         contest_period[minute] = contest_period[minute] + 1
 
 start = 0
-end = 59
+end = 0
 
 minute_time = start_time
 
@@ -54,15 +54,9 @@ with open('rates.csv', 'w', newline='') as csvfile:
         
     for i in range(1440):
         writer.writerow([contest_period_times[i], np.sum(contest_period[start:end])])
-        # print(contest_period_times[i], np.sum(contest_period[start:end]))
-        start = start + 1
+        print(contest_period_times[i], start, end, np.sum(contest_period[start:end]))
+        
+        if end > 59:
+            start = start + 1
+
         end = end + 1
-
-'''
-for idx, minute in enumerate(contest_period):
-
-    print(idx, minute)
-
-    if idx == 447:
-        break
-'''
